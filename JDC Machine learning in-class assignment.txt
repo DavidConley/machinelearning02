@@ -1,0 +1,109 @@
+#John David Conley
+#Machine Learning
+#Assignment 2
+#10-18-2022
+#https://github.com/DavidConley/machinelearning02
+
+###1. Numpy
+###Using NumPy create random vector of size 15 having only Integers in the range 1-20.
+###1. Reshape the array to 3 by 5
+###2. Print array shape.
+###3. Replace the max in each row by 0
+import numpy as np
+np.__version__
+
+arr = np.random.randint(1, 21, 15)
+arr
+
+#1
+arr2 = arr.reshape((3,5))
+arr2
+
+#2
+print(arr2.shape)
+
+#3
+np.where(arr2 == arr2.max(axis = 1)[:,None], 0, arr2)
+
+###2. Pandas
+###1. Read the provided CSV file ‘data.csv’.
+###https://drive.google.com/drive/folders/1h8C3mLsso-R-sIOLsvoYwPLzy2fJ4IOF?usp=sharing
+###2. Show the basic statistical description about the data.
+###3. Check if the data has null values.
+###a. Replace the null values with the mean
+###4. Select at least two columns and aggregate the data using: min, max, count, mean.
+###5. Filter the dataframe to select the rows with calories values between 500 and 1000.
+###6. Filter the dataframe to select the rows with calories values > 500 and pulse < 100.
+###7. Create a new “df_modified” dataframe that contains all the columns from df except for “Maxpulse”.
+###8. Delete the “Maxpulse” column from the main df dataframe
+###9. Convert the datatype of Calories column to int datatype.
+###10. Using pandas create a scatter plot for the two columns (Duration and Calories).
+import pandas as pd
+pd.__version__
+
+#1
+df = pd.read_csv('data.csv')
+df
+
+#2
+df.describe(include='all')
+
+#3
+df.isnull().any()
+
+#3a
+df2 = df.fillna(df.replace('',df.mean()))
+df2['Calories'] = df2['Calories'].fillna(df2['Calories'].mean())
+df2
+
+df2.isnull().any()
+
+#4
+df2.groupby(['Pulse']).agg({'Duration': ['min']}).reset_index()
+
+df2.groupby(['Pulse']).agg({'Duration': ['max']}).reset_index()
+
+df2.groupby(['Pulse']).agg({'Duration': ['count']}).reset_index()
+
+df2.groupby(['Pulse']).agg({'Duration': ['mean']}).reset_index()
+
+#5
+df2[(df2['Calories'] > 500) & (df2['Calories'] < 1000)]
+
+#6
+df2[(df2['Calories'] > 500) | (df2['Calories'] < 100)]
+
+#7
+df_modified = df2.drop('Maxpulse', axis = 1)
+df_modified
+
+#8
+df3 = df2.copy()
+del df3['Maxpulse']
+df3
+
+#9
+print(df3.dtypes)
+
+df3['Calories'] = df3['Calories'].astype(int)
+print(df3.dtypes)
+
+df3
+
+#10
+df3.plot.scatter(x='Duration', y='Calories', c='DarkBlue')
+
+###3. Matplotlib
+###1. Write a Python programming to create a below chart of the popularity of programming Languages.
+###2. Sample data:
+###Programming languages: Java, Python, PHP, JavaScript, C#, C++
+###Popularity: 22.2, 17.6, 8.8, 8, 7.7, 6.7
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+mpl.__version__
+
+slices = np.array([22.2, 17.6, 8.8, 8, 7.7, 6.7])
+dlabels = ["Java", "Python", "PHP", "JavaScript", "C#", "C++"]
+
+plt.pie(slices, labels = dlabels, autopct='%.1f', explode = [0.1, 0, 0, 0, 0, 0])
+plt.show()
